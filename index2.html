@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index2.css') }}">
+    <title>New User</title>
+</head>
+<body>
+    <div class="main">
+        <h3>Create Account As </h3>
+        <div class="wrap">
+            <a href="{{ url_for('register_teacher') }}" class="button">
+                Teacher
+            </a>
+              
+            <a href="{{ url_for('register_student') }}" class="button">
+                Student
+            </a>
+        </div>
+    </div>
+</body>
+</html>
