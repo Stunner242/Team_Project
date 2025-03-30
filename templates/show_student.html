@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Student Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='css/bg.jpg') }}");
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background:transparent;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #fbfbfb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            color: white;
+        }
+
+        th {
+            background:transparent;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background:transparent;
+        }
+
+        tr:hover {
+            background:transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>All Student Records</h1>
+        </div>
+
+        {% if students %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Gender</th>
+                    <th>Total Present</th>
+                    <th>Total Absent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.id }}</td>
+                    <td>{{ student.username }}</td>
+                    <td>{{ student.class }}</td>
+                    <td>{{ student.gender }}</td>
+                    <td>{{ student.present }}</td>
+                    <td>{{ student.absent }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p style="text-align: center; font-size: 18px; color: #ff0000;">No student records found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
