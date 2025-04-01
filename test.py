@@ -48,7 +48,7 @@ def start():
 
     # Check credentials in the database using the imported function
     if role == 'teacher':
-        if check_credentials(username, password):
+        if check_credentials(username, password,id1):
             return render_template('TeacherDashBoard.html',username=username)  # Call the webcam capture function if valid
         else:
             return "Invalid username or password."  # Return message if credentials are incorrect
