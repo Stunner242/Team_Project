@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  </head>
+  <body>
+    <h1>Welcome To The Face Attendance System</h1>
+    <div class="main">
+      <h2>Login</h2>
+
+      <form action="/start" method="POST">
+          <label for="first">Username:</label>
+          <span class ="icon"><ion-icon name="person-outline"></ion-icon></span>
+          <input type="text" id="first" name="first" placeholder="Enter your Username" required>
+
+          <label for="id">Id:</label>
+          <span class ="icon"><ion-icon name="person-outline"></ion-icon></span>
+          <input type="text" id="id" name="id" placeholder="Enter your id" required>
+          
+
+          <label for="password">Password:</label>
+          <span class ="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+          <input type="password" id="password" name="password" placeholder="Enter your Password" required>
+          
+
+          <label for="role">Select Role:</label>
+          <select id="role" name="role" required>
+              <option value="" disabled selected>Select your role</option>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+          </select>
+
+          <div class="wrap">
+              <button type="submit">Submit</button>
+          </div>
+      </form>
+
+      <p>Not registered?
+          <a href="{{ url_for('create_account') }}">Create an account</a>
+      </p>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  </body>
+</html>

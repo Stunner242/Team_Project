@@ -1,0 +1,98 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    background-color: rgba(190, 190, 214, 0.8);
+    background-size: contain;
+    background-position: center;
+    flex-direction: column;
+    margin: 0;
+    background-image: url('bg.jpg');
+  
+  }
+  
+  .main {
+    background:transparent;
+    border-radius: 15px;
+    border: 2px solid rgb(193, 170, 170);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 10px 20px;
+    transition: transform 0.2s;
+    width: 500px;
+    text-align: center;
+  }
+  
+  h2{
+    color: white;
+  }
+  
+  label {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+    color: #f8f7f7;
+    font-weight: bold;
+  }
+  
+  input,select{
+    width: 50%; /* Center and adjust width */
+    margin-bottom: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ffffff;
+    border-radius: 15px;
+    background:transparent;
+    text-align: center;/* Optional: Can also use "center" if desired */
+    color: rgb(242, 246, 246);
+}
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: none;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    background-color:  #ffffff;
+    width: 50%;
+    font-size: 16px;
+  }
+  p{
+    color: white;
+  }
+
+
+  
+  .wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  h1 {
+    animation: slideIn 2s ease-in-out;
+    color: white;
+
+  }
+  option{
+    color: black; 
+   }
+  span{
+    color: white;
+  }
+  
