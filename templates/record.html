@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0a2d72;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 700px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .student-info, .attendance-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #8e86d2;
+            box-shadow: 0px 2px 4px rgba(167, 142, 142, 0.1);
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .student-info p, .attendance-info p {
+            margin: 5px 0;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .attendance-info {
+            text-align: center;
+        }
+
+        .attendance-info p {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Attendance Record</h1>
+        </div>
+
+        <div class="student-info">
+            <p><strong>Name:</strong> {{ student.username }}</p>
+            <p><strong>Class:</strong> {{ student.class }}</p>
+            <p><strong>Password:</strong> {{ student.password }}</p>
+            <p><strong>Gender:</strong> {{ student.gender }}</p>
+            <p><strong>ID:</strong> {{ student.id }}</p>
+            <p><strong>Total Present:</strong>{{student.present}}</p>
+            <p><strong>Total Absent:</strong>{{student.absent}}</p>
+        </div>
+    </div>
+</body>
+</html>
