@@ -5,9 +5,10 @@ import time
 from Check import check_credentials  # Importing the credential check function
 from Studentcheck import check_Student
 from StudentData import get_student_data
+from Match import generate_face_encodings_from_image
 from All_Student_data import get_all_student
+from All_teacher_data import get_teacher_data
 from TakeAttdence import capture_images
-
 
 
 # Create the Flask app
@@ -26,19 +27,24 @@ def create_account():
 @app.route('/register-teacher')
 def register_teacher():
     return render_template('Teacher.html') 
+@app.route('/teacher-dashboard')
+def teacher_dashboard():
+    class_name = request.args.get('class_name', None)
+    username = request.args.get('username', None)
+    return render_template('TeacherDashBoard.html', class_name=class_name, username=username)  # 
 
 # Route for student registration
 @app.route('/register-student')
 def register_student():
     return render_template('Student.html')  #  This will render the Student.html 
-@app.route('/take-attendance')
+@app.route('/take_attendance')
 def take_attendance():
-    return  capture_images()# Call the capture_images function to start capturing images
-@app.route('/show-student-data')
+    return capture_images()  # Call the capture_images function to start capturing images
+@app.route('/show_student')
 def show_student():
-    student_data = get_all_student()  # Get all student data from the database
-    return render_template('show_student.html',students=student_data)  # This will render the show_student.html page 
-
+   class_name = request.args.get('class_name', None)
+   student_data = get_all_student(class_name)  # Get all student data for the specified class
+   return render_template('show_student.html', students=student_data)  # Render the show_student.html template with the student data
 # Route to handle form submission
 @app.route('/start', methods=['POST'])
 def start():
@@ -50,7 +56,8 @@ def start():
     # Check credentials in the database using the imported function
     if role == 'teacher':
         if check_credentials(username, password,id1):
-            return render_template('TeacherDashBoard.html',username=username)  # Call the webcam capture function if valid
+            classes_data =  get_teacher_data(username, id1)  
+            return render_template('Classes.html',classes=classes_data,username=username)  # Call the webcam capture function if valid
         else:
             return "Invalid username or password."  # Return message if credentials are incorrect
     else:

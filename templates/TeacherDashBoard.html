@@ -4,32 +4,37 @@
     <title>Teacher Dashboard</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-image: url("{{ url_for('static', filename='css/bg.jpg') }}");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    margin: 0;
-    height: 100vh; /* Full viewport height */
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-}
-h2{
-    color: white;
-}
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='css/bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
 
-.dashboard-container {
-    background: transparent; /* Slight transparency */
-    padding: 50px;
-    border-radius: 50px;
-    box-shadow: 0px 0px 10px rgba(236, 229, 229, 0.1);
-    border:  1px solid #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-button {
+        h2 {
+            color: white;
+        }
+        h3{
+            color: white;
+        }
+
+        .dashboard-container {
+            background: transparent; /* Slight transparency */
+            padding: 50px;
+            border-radius: 50px;
+            box-shadow: 0px 0px 10px rgba(236, 229, 229, 0.1);
+            border:  1px solid #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
             background:transparent;
             color: white;
             border: 1px solid #ffffff;
@@ -48,12 +53,12 @@ button {
     </style>
 </head>
 <body>
-
     <div class="dashboard-container">
         <h2>Welcome {{ username }}</h2>
-        <button onclick="location.href='/take-attendance'">Take Attendance</button>
-        <button onclick="location.href='/show-student-data'">Show Student Data</button>
+        <h3>Selected Class: {{ class_name }}</h3>
+        <button onclick="location.href='/take_attendance?class_name={{ class_name }}'">Take Attendance</button>
+        <button onclick="location.href='/show_student?class_name={{ class_name }}'">View Attendance</button>
+      
     </div>
-
 </body>
 </html>

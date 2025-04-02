@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='css/bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            flex-direction: column; /* Stack items vertically */
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .class-boxes {
+            display: flex;
+            flex-direction: column; /* Stack the boxes vertically */
+            align-items: center;  /* Center horizontally */
+            gap: 20px;  /* Space between the boxes */
+        }
+
+        .class-box {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            width: 300px;  /* Width of each box */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        .class-box:hover {
+            background-color: #f0f3f5;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome {{username}}</h1>
+        </div>
+        <div class="class-boxes">
+            {% for class_info in classes %}
+            <a href="{{ url_for('teacher_dashboard', class_name=class_info,username=username) }}" class="class-box">
+                {{ class_info }}
+            </a>
+            
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
