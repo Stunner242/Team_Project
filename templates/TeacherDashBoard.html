@@ -55,10 +55,16 @@
 <body>
     <div class="dashboard-container">
         <h2>Welcome {{ username }}</h2>
-        <h3>Selected Class: {{ class_name }}</h3>
-        <button onclick="location.href='/take_attendance?class_name={{ class_name }}'">Take Attendance</button>
-        <button onclick="location.href='/show_student?class_name={{ class_name }}'">View Attendance</button>
-      
+        <h3>Selected Class:{{ class_name}}</h3>
+        <h3>Subject:{{ subject_name}}</h3>
+        <button onclick="location.href='/take_attendance?class_name={{ class_name }}&subject_name={{ subject_name }}'">
+            Take Attendance
+        </button>
+        
+        <button onclick="location.href='/show_student?class_name={{ class_name }}&subject_name={{ subject_name }}'">
+            View Attendance
+        </button>
+        
     </div>
 </body>
 </html>

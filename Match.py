@@ -3,7 +3,7 @@ import cv2
 from CheckEncoding import check_Encoding
 from updatepresent import update_present
 
-def generate_face_encodings_from_image(image_path):
+def generate_face_encodings_from_image(image_path,class_name,subject_name):
     """Generates face encodings for all faces in an image."""
 
     # Read the image using OpenCV
@@ -41,9 +41,8 @@ def generate_face_encodings_from_image(image_path):
         if list1:
             stored_id = list1[0]
             stored_name=list1[1]
-            roll_no = list1[2]
-            if update_present(roll_no,stored_id):
-                print("Attendance marked for",stored_name)
+            if update_present(stored_id,class_name,subject_name):
+                print("Attendance marked for",stored_name,stored_id,subject_name)
             else:
                 print("Error marking attendance.")
 

@@ -30,20 +30,23 @@ def register_teacher():
 @app.route('/teacher-dashboard')
 def teacher_dashboard():
     class_name = request.args.get('class_name', None)
+    subject_name = request.args.get('subject_name', None)
     username = request.args.get('username', None)
-    return render_template('TeacherDashBoard.html', class_name=class_name, username=username)  # 
-
+    return render_template('TeacherDashBoard.html', class_name=class_name, subject_name=subject_name,username=username)  # This will render the TeacherDashBoard.html page with class_name and subject_name as parameters
 # Route for student registration
 @app.route('/register-student')
 def register_student():
     return render_template('Student.html')  #  This will render the Student.html 
 @app.route('/take_attendance')
 def take_attendance():
-    return capture_images()  # Call the capture_images function to start capturing images
+    class_name = request.args.get('class_name', None)
+    subject_name = request.args.get('subject_name', None)
+    return capture_images(class_name,subject_name)  # Call the capture_images function to start capturing images
 @app.route('/show_student')
 def show_student():
    class_name = request.args.get('class_name', None)
-   student_data = get_all_student(class_name)  # Get all student data for the specified class
+   subject_name = request.args.get('subject_name', None)
+   student_data = get_all_student(class_name,subject_name)  # Get all student data for the specified class
    return render_template('show_student.html', students=student_data)  # Render the show_student.html template with the student data
 # Route to handle form submission
 @app.route('/start', methods=['POST'])

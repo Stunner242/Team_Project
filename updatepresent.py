@@ -1,13 +1,13 @@
 import mysql.connector
 
-def update_present(roll_no, id):
+def update_present(id,class_name, subject_name):
     try:
         conn = mysql.connector.connect(host='localhost', user='root', password='Golu123', database='garvit')
         cursor = conn.cursor()
 
         # Fetch the current present count
-        select_query = "SELECT present FROM Student WHERE roll_no = %s AND id = %s"
-        cursor.execute(select_query, (roll_no, id))
+        select_query = "SELECT present FROM subject WHERE class = %s AND subject_name = %s AND id = %s"
+        cursor.execute(select_query, (class_name, subject_name, id))
         result = cursor.fetchone()
 
         # If present is NULL, set it to 0
@@ -15,8 +15,8 @@ def update_present(roll_no, id):
         new_present = curr_present + 1
 
         # Update the present count
-        update_query = "UPDATE Student SET present = %s WHERE roll_no = %s AND id = %s"
-        cursor.execute(update_query, (new_present, roll_no, id))
+        update_query = "UPDATE subject SET present = %s WHERE subject_name = %s AND id = %s AND class = %s"
+        cursor.execute(update_query, (new_present,subject_name, id, class_name))
         conn.commit()
 
         if cursor.rowcount == 1:

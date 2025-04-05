@@ -2,7 +2,7 @@ from Match import generate_face_encodings_from_image
 import cv2
 import os
 import time
-def capture_images():
+def capture_images(class_name, subject_name):
     desktop_path = r"C:\Users\Lenovo\OneDrive\Desktop\307"
     os.makedirs(desktop_path, exist_ok=True)
 
@@ -25,7 +25,7 @@ def capture_images():
             filepath = os.path.join(desktop_path, filename)
             cv2.imwrite(filepath, frame)
             print(f"Image saved successfully to: {filepath}")
-            generate_face_encodings_from_image(filepath)
+            generate_face_encodings_from_image(filepath,class_name,subject_name)  
 
 
         # Exit on 'q' press

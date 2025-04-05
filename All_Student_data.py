@@ -1,11 +1,11 @@
 import mysql.connector
-def get_all_student(class_name):
+def get_all_student(class_name,subject_name):
     try:
         # Connect to the database
         conn = mysql.connector.connect(host='localhost', user='root', password='Golu123', database='garvit')
         cursor = conn.cursor()
-        select_query = "SELECT id,username,gender,class,present,absent FROM student where class = %s"
-        cursor.execute(select_query,(class_name,))
+        select_query = "SELECT id,username,gender,class,present,absent FROM student where class = %s AND subject_name = %s"
+        cursor.execute(select_query,(class_name,subject_name))
         result = cursor.fetchall()
         conn.close()
         student_data = []

@@ -2,67 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Details</title>
+    <title>Student Attendance</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0a2d72;
+            background-image: url("{{ url_for('static', filename='css/bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             margin: 0;
-            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
         .container {
-            width: 80%;
-            max-width: 700px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .header {
+            background: transparent;
+            border: 1px solid #ffffff;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 800px;
+            color: white;
             text-align: center;
-            margin-bottom: 20px;
         }
 
         .header h1 {
-            font-size: 24px;
-            color: #333;
-        }
-
-        .student-info, .attendance-info {
+            font-size: 32px;
             margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #8e86d2;
-            box-shadow: 0px 2px 4px rgba(167, 142, 142, 0.1);
+            color: white;
         }
 
         .student-info {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
             margin-bottom: 30px;
+            text-align: left;
         }
 
-        .student-info p, .attendance-info p {
-            margin: 5px 0;
+        .student-info p {
             font-size: 18px;
-            color: #555;
+            margin: 8px 0;
         }
 
-        .attendance-info {
+        h2 {
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ffffff;
             text-align: center;
+            color: white;
         }
 
-        .attendance-info p {
-            font-size: 20px;
-            font-weight: bold;
+        th {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #ddd;
         }
     </style>
 </head>
@@ -73,13 +85,36 @@
         </div>
 
         <div class="student-info">
-            <p><strong>Name:</strong> {{ student.username }}</p>
-            <p><strong>Class:</strong> {{ student.class }}</p>
-            <p><strong>Password:</strong> {{ student.password }}</p>
-            <p><strong>Gender:</strong> {{ student.gender }}</p>
-            <p><strong>ID:</strong> {{ student.id }}</p>
-            <p><strong>Total Present:</strong>{{student.present}}</p>
-            <p><strong>Total Absent:</strong>{{student.absent}}</p>
+            <p><strong>Name: </strong> {{ student.username }}</p>
+            <p><strong>Password: </strong> {{ student.password }}</p>
+            <p><strong>ID: </strong> {{ student.id }}</p>
+            <p><strong>Roll No: </strong> {{ student.roll_no }}</p>
+            <p><strong>Gender: </strong> {{ student.gender }}</p>
+            <p><strong>Class: </strong> {{ student.class }}</p>
+        </div>
+
+        <h2>Subject-wise Attendance</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in student.attendance %}
+                <tr>
+                    <td>{{ record.subject_name }}</td>
+                    <td>{{ record.present if record.present is not none else 0 }}</td>
+                    <td>{{ record.absent if record.absent is not none else 0 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>© Student Attendance System</p>
         </div>
     </div>
 </body>
