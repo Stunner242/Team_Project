@@ -2,6 +2,10 @@ from flask import Flask, request, render_template
 import cv2
 import os
 import time
+from flask import Response
+from bson.objectid import ObjectId
+from pymongo import MongoClient
+import gridfs
 from Check import check_credentials  # Importing the credential check function
 from Studentcheck import check_Student
 from StudentData import get_student_data
@@ -9,6 +13,12 @@ from Match import generate_face_encodings_from_image
 from All_Student_data import get_all_student
 from All_teacher_data import get_teacher_data
 from TakeAttdence import capture_images
+from Getimage import get_image  
+
+
+client = MongoClient("mongodb://localhost:27017")
+db = client["Attendance"]  # Replace with your actual DB name
+fs = gridfs.GridFS(db)
 
 
 # Create the Flask app
@@ -42,6 +52,16 @@ def take_attendance():
     class_name = request.args.get('class_name', None)
     subject_name = request.args.get('subject_name', None)
     return capture_images(class_name,subject_name)  # Call the capture_images function to start capturing images
+@app.route('/show_faces')
+def show_faces():
+    class_name = request.args.get('class_name', None)
+    subject_name = request.args.get('subject_name', None)
+    image_list = get_image(class_name, subject_name)  # Get images from the database
+    return render_template('Show_faces.html',image_list=image_list)  # This will render the show_faces.html page
+@app.route('/image/<file_id>')
+def serve_image(file_id):
+    file = fs.get(ObjectId(file_id))
+    return Response(file.read(), mimetype='image/jpeg')
 @app.route('/show_student')
 def show_student():
    class_name = request.args.get('class_name', None)
