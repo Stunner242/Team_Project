@@ -9,38 +9,54 @@ def check_Encoding(encoding):
         conn = mysql.connector.connect(host='localhost', user='root', password='Golu123', database='garvit')
         cursor = conn.cursor()
 
-        # Fetch all encodings for the given user
-        select_query = "SELECT id,name,roll_no,encoding FROM face_encodings"
+        # Fetch all encodings from the database
+        select_query = "SELECT id, name, roll_no, encoding FROM face_encodings"
         cursor.execute(select_query)
         results = cursor.fetchall()
 
         if not results:
-            print("No encoding found for this user.")
+            print("⚠️ No encodings found in the database.")
             return False
 
+        print(f"🔍 Trying to match against {len(results)} stored encodings...")
+
+        # Minimum distance found
+        best_match = None
+        best_distance = 1.0
+
         for row in results:
-            stored_id=row[0]
-            stored_name=row[1]
-            stored_roll_no=row[2]
-            stored_encoding_base64 = row[3] # Extract stored encoding
+            stored_id = row[0]
+            stored_name = row[1]
+            stored_roll_no = row[2]
+            stored_encoding_base64 = row[3]
 
-            # Decode Base64
-            stored_encoding_bytes = base64.b64decode(stored_encoding_base64)
+            # Decode and decompress the stored encoding
+            try:
+                stored_encoding_bytes = base64.b64decode(stored_encoding_base64)
+                stored_encoding_array = np.frombuffer(zlib.decompress(stored_encoding_bytes), dtype=np.float32)
+            except Exception as e:
+                print(f"⚠️ Error decoding encoding for {stored_name} ({stored_id}): {e}")
+                continue
 
-            # Decompress using zlib
-            stored_encoding_array = np.frombuffer(zlib.decompress(stored_encoding_bytes), dtype=np.float32)
+            # Calculate face distance
+            distance = face_recognition.face_distance([stored_encoding_array], encoding)[0]
+            print(f"🧠 Distance to {stored_name} ({stored_id}): {distance:.4f}")
 
-            # Compare with face_recognition
-            match = face_recognition.compare_faces([stored_encoding_array], encoding, tolerance=0.6)
-            list1=[stored_id,stored_name,stored_roll_no] 
+            # Use strict tolerance threshold
+            if distance < 0.45:
+                if distance < best_distance:
+                    best_distance = distance
+                    best_match = [stored_id, stored_name, stored_roll_no]
 
-            if match[0]: # If match found
-                return list1
-
-        return False
+        if best_match:
+            print(f"✅ Match found: {best_match[1]} ({best_match[0]}) | Distance: {best_distance:.4f}")
+            return best_match
+        else:
+            print("❌ No suitable match found.")
+            return False
 
     except mysql.connector.Error as err:
-        print("Error:", err)
+        print("❌ Database error:", err)
         return False
 
     finally:
