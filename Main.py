@@ -14,6 +14,7 @@ from All_Student_data import get_all_student
 from All_teacher_data import get_teacher_data
 from TakeAttdence import capture_images
 from Getimage import get_image  
+from Admin import check_Admin
 
 
 client = MongoClient("mongodb://localhost:27017")
@@ -28,25 +29,13 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')  # This will look for index.html in the templates folder
-
-# Route for the "Create Account" page
-@app.route('/create-account')
-def create_account():
-    return render_template('index2.html')  # This will render index2.html page
-# Route for teacher registrationcls
-@app.route('/register-teacher')
-def register_teacher():
-    return render_template('Teacher.html') 
 @app.route('/teacher-dashboard')
 def teacher_dashboard():
     class_name = request.args.get('class_name', None)
     subject_name = request.args.get('subject_name', None)
     username = request.args.get('username', None)
     return render_template('TeacherDashBoard.html', class_name=class_name, subject_name=subject_name,username=username)  # This will render the TeacherDashBoard.html page with class_name and subject_name as parameters
-# Route for student registration
-@app.route('/register-student')
-def register_student():
-    return render_template('Student.html')  #  This will render the Student.html 
+
 @app.route('/take_attendance')
 def take_attendance():
     class_name = request.args.get('class_name', None)
@@ -77,22 +66,21 @@ def start():
     role = request.form['role'].strip()
 
     # Check credentials in the database using the imported function
-    if role == 'teacher':
+    if role == 'faculty':
         if check_credentials(username, password,id1):
             classes_data =  get_teacher_data(username, id1)  
             return render_template('Classes.html',classes=classes_data,username=username)  # Call the webcam capture function if valid
         else:
             return "Invalid username or password."  # Return message if credentials are incorrect
-    else:
-        if role == 'student':
-            if check_Student(username, password,id1):
-                student_data = get_student_data(username, password,id1)  # Get student data from the database
-                if student_data:
-                    return render_template('record.html', student=student_data)
-                else:
-                    return "Student data not found."
-        else:
-            return "Invalid Student username or password."
-    return "Invalid username or password."
+    elif role == 'student':
+        if check_Student(username, password,id1):
+            student_data = get_student_data(username, password,id1)  # Get student data from the database
+            if student_data:
+                return render_template('record.html', student=student_data)
+            else:
+                return "Student data not found."
+    elif role== 'admin':
+        if check_Admin(username, password,id1):
+            return render_template('student.html')  # Call the webcam capture function if valid"        
 if __name__ == '__main__':
     app.run(debug=True)

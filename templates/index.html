@@ -1,46 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Project</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-  </head>
-  <body>
-    <h1>Welcome To The Face Attendance System</h1>
-    <div class="main">
-      <h2>Login</h2>
+<head>
+  <meta charset="UTF-8">
+  <title>Face Attendance System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='css/bg.png') }}" id="favicon">
 
-      <form action="/start" method="POST">
-          <label for="first">Username:</label>
-          <span class ="icon"><ion-icon name="person-outline"></ion-icon></span>
-          <input type="text" id="first" name="first" placeholder="Enter your Username" required>
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
 
-          <label for="id">Id:</label>
-          <span class ="icon"><ion-icon name="person-outline"></ion-icon></span>
-          <input type="text" id="id" name="id" placeholder="Enter your id" required>
-          
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-image: url("{{ url_for('static', filename='css/bg.png') }}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+      text-align: center;
+    }
 
-          <label for="password">Password:</label>
-          <span class ="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-          <input type="password" id="password" name="password" placeholder="Enter your Password" required>
-          
+    .logo-container {
+      margin-top: 20px;
+    }
 
-          <label for="role">Select Role:</label>
-          <select id="role" name="role" required>
-              <option value="" disabled selected>Select your role</option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-          </select>
+    .logo-spin {
+      width: 100px;
+      transition: transform 1s ease-in-out;
+    }
 
-          <div class="wrap">
-              <button type="submit">Submit</button>
-          </div>
-      </form>
+    .spin-animation {
+      animation: spin 1s linear;
+    }
 
-      <p>Not registered?
-          <a href="{{ url_for('create_account') }}">Create an account</a>
-      </p>
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      margin: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .roles {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 2px solid black;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      backdrop-filter: blur(6px);
+    }
+
+    .role {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .role img {
+      width: 100px;
+      height: 60px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .role button {
+      padding: 10px 20px;
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.4s ease;
+    }
+
+    .role button:hover {
+      background-color: white;
+      color: black;
+      transform: scale(1.1);
+      box-shadow: 0 0 12px white;
+    }
+
+    .login-form {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid black;
+      border-radius: 15px;
+      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(6px);
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .login-form form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .login-form input,
+    .login-form button {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+      transition: all 0.3s ease;
+    }
+
+    .login-form input:focus {
+      outline: none;
+      box-shadow: 0 0 10px #00ffcc;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .login-form button {
+      background-color: white;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .login-form button:hover {
+      background-color: #00ffcc;
+      color: black;
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00ffcc;
+    }
+
+    @media (max-width: 768px) {
+      .roles {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .role img {
+        width: 80px;
+        height: 50px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="logo-container">
+    <img src="{{ url_for('static', filename='css/clg logo.png') }}" alt="Logo" id="logo" class="logo-spin">
+  </div>
+
+  <!-- Welcome Section -->
+  <section id="welcome" class="section">
+    <h1>Welcome to the Face Recognition Attendance System</h1>
+    <p>Press any key or scroll down to continue</p>
+  </section>
+
+  <!-- Role Selection Section -->
+  <section id="roleSelection" class="section">
+    <h2>Select Your Role</h2>
+    <div class="roles">
+      <div class="role">
+        <img src="{{ url_for('static', filename='css/admin.png') }}" alt="Admin">
+        <button onclick="scrollToLogin('Admin')">Admin</button>
+      </div>
+      <div class="role">
+        <img src="{{ url_for('static', filename='css/faculty.png') }}" alt="Faculty">
+        <button onclick="scrollToLogin('Faculty')">Faculty</button>
+      </div>
+      <div class="role">
+        <img src="{{ url_for('static', filename='css/stuDent.png') }}" alt="Student">
+        <button onclick="scrollToLogin('Student')">Student</button>
+      </div>
     </div>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-  </body>
+  </section>
+
+  <!-- Login Section -->
+  <section id="loginForm" class="section login-form">
+    <h2 id="formTitle">Login</h2>
+    <form action="/start" method="POST">
+      <input type="text" name="first" placeholder="Username" required>
+      <input type="text" name="id" placeholder="ID" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="hidden" name="role" id="roleInput">
+      <button type="submit">Login</button>
+    </form>
+  </section>
+
+  <script>
+    document.addEventListener('keydown', () => {
+      document.getElementById('roleSelection').scrollIntoView({ behavior: 'smooth' });
+    }, { once: true });
+
+    document.addEventListener('wheel', () => {
+      document.getElementById('roleSelection').scrollIntoView({ behavior: 'smooth' });
+    }, { once: true });
+
+    function scrollToLogin(role) {
+      document.getElementById('formTitle').innerText = `${role} Login`;
+      document.getElementById('roleInput').value = role.toLowerCase();  // Set role input
+
+      const loginSection = document.getElementById('loginForm');
+      loginSection.style.display = 'flex';
+      loginSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sections.forEach(sec => observer.observe(sec));
+
+    window.addEventListener('load', () => {
+      const logo = document.getElementById('logo');
+      logo.classList.add('spin-animation');
+      setTimeout(() => {
+        logo.classList.remove('spin-animation');
+      }, 1000);
+    });
+  </script>
+</body>
 </html>

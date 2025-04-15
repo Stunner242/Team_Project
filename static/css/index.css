@@ -10,7 +10,7 @@ body {
     background-position: center;
     flex-direction: column;
     margin: 0;
-    background-image: url('bg.jpg');
+    background-image: url('bg.png');
   
   }
   
@@ -72,16 +72,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  @keyframes slideIn {
-    0% {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
   
   h1 {
