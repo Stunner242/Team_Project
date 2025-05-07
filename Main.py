@@ -1,86 +1,117 @@
-from flask import Flask, request, render_template
-import cv2
-import os
-import time
-from flask import Response
-from bson.objectid import ObjectId
+from flask import Flask, request, render_template, Response
 from pymongo import MongoClient
 import gridfs
-from Check import check_credentials  # Importing the credential check function
+from bson.objectid import ObjectId
+from datetime import datetime
+from Check import check_credentials
 from Studentcheck import check_Student
 from StudentData import get_student_data
-from Match import generate_face_encodings_from_image
 from All_Student_data import get_all_student
 from All_teacher_data import get_teacher_data
 from TakeAttdence import capture_images
-from Getimage import get_image  
+from Getimage import get_image
 from Admin import check_Admin
 
+import Encode  # <- import your updated encode.py
 
 client = MongoClient("mongodb://localhost:27017")
-db = client["Attendance"]  # Replace with your actual DB name
+db = client["Attendance"]
 fs = gridfs.GridFS(db)
 
-
-# Create the Flask app
 app = Flask(__name__)
 
-# Route for the main page
+def delete_old_files():
+    today_date = datetime.now().strftime('%Y-%m-%d')
+    old_files = db.fs.files.find({
+        "metadata.date": {"$ne": today_date}  # Only NOT today’s images
+    })
+    for file in old_files:
+        fs.delete(file["_id"])
+
+# Call the function on app startup
+delete_old_files()
+
 @app.route('/')
 def index():
-    return render_template('index.html')  # This will look for index.html in the templates folder
+    return render_template('index.html')
+
+@app.route('/Next_Student')
+def next_student():
+    return render_template('Student.html')
+
+@app.route('/Stop_Server')
+def stop_server():
+    return "Server Stopped"
+
 @app.route('/teacher-dashboard')
 def teacher_dashboard():
-    class_name = request.args.get('class_name', None)
-    subject_name = request.args.get('subject_name', None)
-    username = request.args.get('username', None)
-    return render_template('TeacherDashBoard.html', class_name=class_name, subject_name=subject_name,username=username)  # This will render the TeacherDashBoard.html page with class_name and subject_name as parameters
+    class_name = request.args.get('class_name')
+    subject_name = request.args.get('subject_name')
+    username = request.args.get('username')
+    return render_template('TeacherDashBoard.html', class_name=class_name, subject_name=subject_name, username=username)
 
 @app.route('/take_attendance')
 def take_attendance():
-    class_name = request.args.get('class_name', None)
-    subject_name = request.args.get('subject_name', None)
-    return capture_images(class_name,subject_name)  # Call the capture_images function to start capturing images
+    class_name = request.args.get('class_name')
+    subject_name = request.args.get('subject_name')
+    return capture_images(class_name, subject_name)
+
 @app.route('/show_faces')
 def show_faces():
-    class_name = request.args.get('class_name', None)
-    subject_name = request.args.get('subject_name', None)
-    image_list = get_image(class_name, subject_name)  # Get images from the database
-    return render_template('Show_faces.html',image_list=image_list)  # This will render the show_faces.html page
+    class_name = request.args.get('class_name')
+    subject_name = request.args.get('subject_name')
+    image_list = get_image(class_name, subject_name)
+    return render_template('Show_faces.html', image_list=image_list)
+
 @app.route('/image/<file_id>')
 def serve_image(file_id):
     file = fs.get(ObjectId(file_id))
     return Response(file.read(), mimetype='image/jpeg')
+
 @app.route('/show_student')
 def show_student():
-   class_name = request.args.get('class_name', None)
-   subject_name = request.args.get('subject_name', None)
-   student_data = get_all_student(class_name,subject_name)  # Get all student data for the specified class
-   return render_template('show_student.html', students=student_data)  # Render the show_student.html template with the student data
-# Route to handle form submission
+    class_name = request.args.get('class_name')
+    subject_name = request.args.get('subject_name')
+    student_data = get_all_student(class_name, subject_name)
+    return render_template('show_student.html', students=student_data)
+
 @app.route('/start', methods=['POST'])
 def start():
     username = request.form['first'].strip()
     password = request.form['password'].strip()
-    id1=request.form['id'].strip()
+    id1 = request.form['id'].strip()
     role = request.form['role'].strip()
 
-    # Check credentials in the database using the imported function
+    # Check if role is faculty
     if role == 'faculty':
-        if check_credentials(username, password,id1):
-            classes_data =  get_teacher_data(username, id1)  
-            return render_template('Classes.html',classes=classes_data,username=username)  # Call the webcam capture function if valid
+        if check_credentials(username, password, id1):
+            classes_data = get_teacher_data(username, id1)
+            return render_template('Classes.html', classes=classes_data, username=username)
         else:
-            return "Invalid username or password."  # Return message if credentials are incorrect
+            return "Invalid Faculty Credentials."  # Return an error with a proper response
+
+    # Check if role is student
     elif role == 'student':
-        if check_Student(username, password,id1):
-            student_data = get_student_data(username, password,id1)  # Get student data from the database
+        if check_Student(username, password, id1):
+            student_data = get_student_data(username, password, id1)
             if student_data:
                 return render_template('record.html', student=student_data)
-            else:
-                return "Student data not found."
-    elif role== 'admin':
-        if check_Admin(username, password,id1):
-            return render_template('student.html')  # Call the webcam capture function if valid"        
+        else:
+            return "Invalid Student Credentials" # Return an error if student data not found
+
+    # Check if role is admin
+    elif role == 'admin':
+        if check_Admin(username, password, id1):
+            return render_template('Student.html')
+        else:
+            return "Invalid Admin Credentials." # Return a forbidden error if admin credentials are invalid
+
+    # Return an error if the role is not recognized
+    return "Invalid role specified.", 400  # Return a bad request error
+
+@app.route('/student_capture', methods=['POST'])
+def student_capture():
+    return Encode.process_student_registration()
+
 if __name__ == '__main__':
     app.run(debug=True)

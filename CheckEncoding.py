@@ -35,7 +35,7 @@ def check_Encoding(encoding):
                 stored_encoding_bytes = base64.b64decode(stored_encoding_base64)
                 stored_encoding_array = np.frombuffer(zlib.decompress(stored_encoding_bytes), dtype=np.float32)
             except Exception as e:
-                print(f"⚠️ Error decoding encoding for {stored_name} ({stored_id}): {e}")
+                print(f" Error decoding encoding for {stored_name} ({stored_id}): {e}")
                 continue
 
             # Calculate face distance
@@ -43,7 +43,7 @@ def check_Encoding(encoding):
             print(f"🧠 Distance to {stored_name} ({stored_id}): {distance:.4f}")
 
             # Use strict tolerance threshold
-            if distance < 0.45:
+            if distance < 0.40:
                 if distance < best_distance:
                     best_distance = distance
                     best_match = [stored_id, stored_name, stored_roll_no]
